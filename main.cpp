@@ -7,79 +7,100 @@ double round(double var)
     double value = (int)(var * 100.0);
     return (double)value / 100.0;
 }
+template <class DT>
+class Point; //class prototype
+template<class LT>
+class LineSegment;
+template<class IT>
+class Segments;
 
 //Start of Point class
+template<class DT>
 class Point{//look in textBook
     protected:
-        double x, y;
+    // we are pointing to the address location
+    // regardless of type
+    DT x;
+    DT y;
     public:
     Point();//default
-    Point(double xValue, double yValue);
+    Point(DT xValue, DT yValue);
     
-    void setLocation(double xValue, double yValue);//This sets x and y
+    void setLocation(DT xValue, DT yValue);//This sets x and y
     
-    double getXValue();//return x
-    double getYValue();//return y
+    DT getXValue();//return x
+    DT getYValue();//return y
 
     void display();//prints in this format (0.0,0.0)
     
 };
-Point::Point(){
-    x = 0.0;
-    y = 0.0;
+template <class DT>
+Point<DT>::Point(){
+    x = NULL;
+    y = NULL;
 }
-Point::Point(double a, double b){
+template<class DT>
+Point<DT>::Point(DT a, DT b){
     x = a;
     y = b;
 }
-void Point::setLocation(double xValue, double yValue){// question isnt this what the constructor does.
+template<class DT>
+void Point<DT>::setLocation(DT xValue, DT yValue){// question isnt this what the constructor does.
     x = xValue;
     y = yValue;
 }
-double Point::getXValue(){
+template<class DT>
+DT Point<DT>::getXValue(){
     return  x;
 }
-double Point::getYValue(){
+template <class DT>
+DT Point<DT>::getYValue(){
     return  y;
 }
-void Point::display(){
+template<class DT>
+void Point<DT>::display(){
     cout<< "("<< round(x) << ", " << round(y) <<")";
 }
 // End of Point class
 
 // Start of LineSegment class
+template<class LT>
 class LineSegment{
     protected:
-        Point p1;//These two are objects
-        Point p2;
+    //so in main when we decide which type of data its going to be
+    //The LT will be converted to that LT
+        Point<LT> p1;
+        Point<LT> p2;
     public:
     LineSegment();
-    LineSegment(Point one, Point owo);
+    LineSegment(Point<LT> one, Point<LT> owo);
     
-    double length();// return the length of the line segment - done
-    Point midpoint();//returns a point object - done
+    LT length();// return the length of the line segment - done
+    Point<LT> midpoint();//returns a point object - done
     
-    Point xIntercept();
-    Point yIntercept();
-    double slope();
+    Point<LT> xIntercept();
+    Point<LT> yIntercept();
+    LT slope();
     bool itIntersects(LineSegment L);
-    Point getPoint1();
-    Point getPoint2();
-    Point intersectionPoint(LineSegment L);
+    Point<LT> getPoint1();
+    Point<LT> getPoint2();
+    Point<LT> intersectionPoint(LineSegment L);
     bool isParrallel(LineSegment L);//checks if slopes are the same
     void displayEquation();// print y = m * x + c
     
 };
-LineSegment::LineSegment(){//Default construtor
+template <class LT>
+LineSegment<LT>::LineSegment(){//Default construtor
     p1.setLocation(0.0, 0.0);
     p2.setLocation(0.0, 0.0);
 }
-LineSegment:: LineSegment(Point one, Point two){
+template<class LT>
+LineSegment<LT>:: LineSegment(Point<LT> one, Point<LT> two){
     p1 = one;
     p2 = two;
 }
-
-double LineSegment::length(){
+template<class LT>
+LT LineSegment<LT>::length(){
     double l = 0.0;
     double x1,x2,y1,y2;//These points are going to be populated with the object call.
     double squareRt;//This will be used to find the root
@@ -102,7 +123,8 @@ double LineSegment::length(){
     double length =  round(squareRt);
     return length;
 }
-double LineSegment::slope(){
+template<class LT>
+LT LineSegment<LT>::slope(){
    
     double x1,x2,y1,y2;
     x1 = p1.getXValue();
@@ -115,7 +137,8 @@ double LineSegment::slope(){
     return slope;
    
 }
-Point LineSegment::midpoint(){
+template<class LT>
+Point<LT> LineSegment<LT>::midpoint(){
     
     //((x1 + x2)/2, (y1 + y2)/2)
     double x1,x2,y1,y2;
@@ -125,10 +148,12 @@ Point LineSegment::midpoint(){
     y2 = p2.getYValue();
     double midPtX = (x1 + x2)/2;
     double midPtY = (y1 + y2)/2;
-    Point midPt( round(midPtX),  round(midPtY));
+    Point<LT> midPt( round(midPtX),  round(midPtY));
     return midPt;
 }
-Point LineSegment::xIntercept(){
+
+template<class LT>
+Point<LT> LineSegment<LT>::xIntercept(){
     double x1,x2,y1,y2;
     x1 = p1.getXValue();
     y1 = p1.getYValue();
@@ -140,10 +165,11 @@ Point LineSegment::xIntercept(){
      double slope = (y2 - y1) / (x2-x1);
     double b = y1 - (slope * x1);
     double xInter = ( - b ) / slope;
-    Point pointxIntercept( round(xInter), 0);
+    Point<LT> pointxIntercept( round(xInter), 0);
     return pointxIntercept;
 }
-Point LineSegment::yIntercept(){
+template<class LT>
+Point<LT> LineSegment<LT>::yIntercept(){
     double x1,x2,y1,y2;
     x1 = p1.getXValue();
     y1 = p1.getYValue();
@@ -154,32 +180,34 @@ Point LineSegment::yIntercept(){
    //double b = y1 - (slope * x1);
    // now we can find x intercept
     double yInter =  y1 - (slope * x1);
-    Point pointyIntercept(0 ,  round(yInter));
+    Point<LT> pointyIntercept(0 ,  round(yInter));
     return pointyIntercept;
 }
 //I am using these two getPoint methods to access thepoint object from the
 //parameter line seg
-Point LineSegment::getPoint1(){
-    double x = p1.getXValue();
-    double y = p1.getYValue();
-    Point px(x,y);
+template<class LT>
+Point<LT> LineSegment<LT>::getPoint1(){
+    LT x = p1.getXValue();
+    LT y = p1.getYValue();
+    Point<LT> px(x,y);
     return px;
 }
-Point LineSegment::getPoint2(){
+template<class LT>
+Point<LT> LineSegment<LT>::getPoint2(){
     double x = p2.getXValue();
     double y = p2.getYValue();
-    Point px2(x,y);
+    Point<LT> px2(x,y);
     return px2;
 }
-
-bool LineSegment::isParrallel(LineSegment L){//Questi754!on about the object created.
+template<class LT>
+bool LineSegment<LT>::isParrallel(LineSegment<LT> L){//Questi754!on about the object created.
    /* The this pointer is letting me access the points in the object that
     is calling the method
    */
        return this->slope() == L.slope();
 }
-
-bool LineSegment::itIntersects(LineSegment L){
+template<class LT>
+bool LineSegment<LT>::itIntersects(LineSegment<LT> L){
     /* if they have the same slope then they will never intersect
      however if they dont then sooner or later they will intersect*/
    // test more then just the slope
@@ -207,7 +235,8 @@ bool LineSegment::itIntersects(LineSegment L){
         return false;
     }
 }
-Point LineSegment::intersectionPoint(LineSegment L){
+template<class LT>
+Point<LT> LineSegment<LT>::intersectionPoint(LineSegment L){
     /*The idea is when they do intercet they will have the
      same y values so we will set them equal to each other
      and find the points. after we find x we will set the x in
@@ -228,11 +257,11 @@ Point LineSegment::intersectionPoint(LineSegment L){
       double c2 = y1 - (m2 * x1);// this is my b for second equation
     double xPointIntercept = (c2 - c1)/ (m1 - m2);
     double yPointIntercept = ((c1*m2) - (c2*m1))/(m2-m1);
-    Point pt( round(xPointIntercept),  round(yPointIntercept));
+    Point<LT> pt( round(xPointIntercept),  round(yPointIntercept));
     return pt;
 }
-
-void LineSegment::displayEquation(){
+template<class LT>
+void LineSegment<LT>::displayEquation(){
    // print y=m*x+c y=1*x+0
     double x1,y1;
     x1 = p1.getXValue();
@@ -252,40 +281,44 @@ void LineSegment::displayEquation(){
 //End of LineSegment class
 
 //start of Intervals Class
-class Intervals{//This class stores a set of line segments and has it own methods
+template<class IT>
+class Segments{//This class stores a set of line segments and has it own methods
     
 protected:
-    LineSegment* segments;// array but we dont know the size yet
+    LineSegment<IT>* segments;// array but we dont know the size yet
     int count;
     int maxSize;
     
 public:
-    Intervals();
-    Intervals(int size);
-    void addLineSegment(LineSegment L);
+    Segments();
+    Segments(int size);
+    void addLineSegment(LineSegment<IT> L);
     void display();
     void displaySub();
     
 };
-Intervals::Intervals () {
+template<class IT>
+Segments<IT>::Segments () {
     segments = NULL;
     count = 0;
     maxSize = 0;
    
 }
-Intervals:: Intervals (int size) {
-    segments = new LineSegment [size];
+template<class IT>
+Segments<IT>:: Segments (int size) {
+    segments = new LineSegment<IT> [size];
     count = 0;
     maxSize = size;
    
 }
-void Intervals::addLineSegment(LineSegment L){
+template<class IT>
+void Segments<IT>::addLineSegment(LineSegment<IT> L){
 
     segments[count] = L;// count is keeping track of element
     count++;
 }
-
-void Intervals::display(){
+template<class IT>
+void Segments<IT>::display(){
     //This for loop will go through all line segments and display
     // the many outputs .
     for(int i = 0; i < maxSize; ++i){
@@ -332,19 +365,18 @@ void Intervals::display(){
 
 
 int main() {
-   // double start = clock();
-   // cout<< start<<endl;
+
     double x1,x2,y1,y2;
     int numberLines ;
     cin >> numberLines;
   
-    Intervals intervals(numberLines);
+    Segments<double> intervals(numberLines);
     
     for(int i = 0; i <= numberLines; ++i){
         cin >> x1 >> y1 >> x2 >> y2;
-        Point point1(x1,y1);
-        Point point2(x2, y2);
-        LineSegment newLine(point1, point2);
+        Point<double> point1(x1,y1);
+        Point<double> point2(x2, y2);
+        LineSegment<double> newLine(point1, point2);
         
         intervals.addLineSegment(newLine);
         if(cin.eof()){
@@ -353,8 +385,6 @@ int main() {
     }
    
     intervals.display();
-   /* double end  =clock();
-    cout<< end<<endl;
-    cout<< end - start<<endl;*/
+
     return 0;
 }
