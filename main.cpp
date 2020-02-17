@@ -2,11 +2,29 @@
 
 using namespace std;
 // this method is from TA Zuyuan Zhang
-double round(double var)
+/*double round(double var)
 {
     double value = (int)(var * 100.0);
     return (double)value / 100.0;
+}*/
+
+double round(double num)
+{    double rndnum;
+    double num2 = num * 100;
+    int num3 = (int)num2;
+    double dec3 = num2 - num3;
+    if ((dec3*10) >= 5) {
+        rndnum = ((int)((num)*100))/100.00 + 0.01;
+        
+    }
+    else {
+        rndnum= ((int)((num)*100))/100.00;
+        
+    }    return rndnum;
+    
 }
+
+
 template <class DT>
 class Point; //class prototype
 template<class LT>
