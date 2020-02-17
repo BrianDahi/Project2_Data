@@ -340,7 +340,7 @@ void Segments<IT>::display(){
     //This for loop will go through all line segments and display
     // the many outputs .
     for(int i = 0; i < maxSize; ++i){
-        double slope = round(segments[i].slope());
+        IT slope = round(segments[i].slope());
         cout<<"Line Segment " <<i + 1<<":"<<endl;
         segments[i].getPoint1().display();
         cout<<",";
@@ -376,11 +376,20 @@ void Segments<IT>::display(){
                "]: Not Parallel and not Intersecting"<< endl;
            }
        }
-        
-        
     }
 }
 
+class Exception{
+    
+};
+
+class LineSegmentsException : Exception{
+  
+};
+
+class SegmentsException : Exception{
+    
+};
 
 int main() {
 
