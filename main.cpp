@@ -101,10 +101,10 @@ LineSegment<LT>:: LineSegment(Point<LT> one, Point<LT> two){
 }
 template<class LT>
 LT LineSegment<LT>::length(){
-    double l = 0.0;
-    double x1,x2,y1,y2;//These points are going to be populated with the object call.
-    double squareRt;//This will be used to find the root
-    double temp = 0.0;
+    LT l = 0.0;
+    LT x1,x2,y1,y2;//These points are going to be populated with the object call.
+    LT squareRt;//This will be used to find the root
+    LT temp = 0.0;
     x1 = p1.getXValue();
     y1 = p1.getYValue();
     
@@ -120,20 +120,20 @@ LT LineSegment<LT>::length(){
         
         squareRt = ( l/temp + temp) / 2;
       }
-    double length =  round(squareRt);
+    LT length =  round(squareRt);
     return length;
 }
 template<class LT>
 LT LineSegment<LT>::slope(){
    
-    double x1,x2,y1,y2;
+    LT x1,x2,y1,y2;
     x1 = p1.getXValue();
     y1 = p1.getYValue();
        
     x2 = p2.getXValue();
     y2 = p2.getYValue();
     //slope is (y2 - y1) / (x2-x1)
-    double slope = (y2 - y1) / (x2-x1);
+    LT slope = (y2 - y1) / (x2-x1);
     return slope;
    
 }
@@ -141,20 +141,20 @@ template<class LT>
 Point<LT> LineSegment<LT>::midpoint(){
     
     //((x1 + x2)/2, (y1 + y2)/2)
-    double x1,x2,y1,y2;
+    LT x1,x2,y1,y2;
     x1 = p1.getXValue();
     y1 = p1.getYValue();
     x2 = p2.getXValue();
     y2 = p2.getYValue();
-    double midPtX = (x1 + x2)/2;
-    double midPtY = (y1 + y2)/2;
+    LT midPtX = (x1 + x2)/2;
+    LT midPtY = (y1 + y2)/2;
     Point<LT> midPt( round(midPtX),  round(midPtY));
     return midPt;
 }
 
 template<class LT>
 Point<LT> LineSegment<LT>::xIntercept(){
-    double x1,x2,y1,y2;
+    LT x1,x2,y1,y2;
     x1 = p1.getXValue();
     y1 = p1.getYValue();
     x2 = p2.getXValue();
@@ -162,24 +162,24 @@ Point<LT> LineSegment<LT>::xIntercept(){
     // y = mx + b; we need b
     
     // now we can find x intercept y becomes zero
-     double slope = (y2 - y1) / (x2-x1);
-    double b = y1 - (slope * x1);
-    double xInter = ( - b ) / slope;
+     LT slope = (y2 - y1) / (x2-x1);
+    LT b = y1 - (slope * x1);
+    LT xInter = ( - b ) / slope;
     Point<LT> pointxIntercept( round(xInter), 0);
     return pointxIntercept;
 }
 template<class LT>
 Point<LT> LineSegment<LT>::yIntercept(){
-    double x1,x2,y1,y2;
+    LT x1,x2,y1,y2;
     x1 = p1.getXValue();
     y1 = p1.getYValue();
     x2 = p2.getXValue();
     y2 = p2.getYValue();
     // y = mx + b; we need b
-    double slope = (y2 - y1) / (x2-x1);
+    LT slope = (y2 - y1) / (x2-x1);
    //double b = y1 - (slope * x1);
    // now we can find x intercept
-    double yInter =  y1 - (slope * x1);
+    LT yInter =  y1 - (slope * x1);
     Point<LT> pointyIntercept(0 ,  round(yInter));
     return pointyIntercept;
 }
@@ -194,8 +194,8 @@ Point<LT> LineSegment<LT>::getPoint1(){
 }
 template<class LT>
 Point<LT> LineSegment<LT>::getPoint2(){
-    double x = p2.getXValue();
-    double y = p2.getYValue();
+    LT x = p2.getXValue();
+    LT y = p2.getYValue();
     Point<LT> px2(x,y);
     return px2;
 }
@@ -216,19 +216,19 @@ bool LineSegment<LT>::itIntersects(LineSegment<LT> L){
     if(this->slope() == L.slope()){
         return false;
     }
-    double x1 = this->p1.getXValue();
-    double y1 = this->p1.getYValue();
-    double x2 = this->p2.getXValue();
-    double y2 = this->p2.getYValue();
+    LT x1 = this->p1.getXValue();
+    LT y1 = this->p1.getYValue();
+    LT x2 = this->p2.getXValue();
+    LT y2 = this->p2.getYValue();
     
     
-    double x3 = L.getPoint1().getXValue();
-    double y3 = L.getPoint1().getYValue();
-    double x4 = L.getPoint2().getXValue();
-    double y4 = L.getPoint2().getYValue();
+    LT x3 = L.getPoint1().getXValue();
+    LT y3 = L.getPoint1().getYValue();
+    LT x4 = L.getPoint2().getXValue();
+    LT y4 = L.getPoint2().getYValue();
     // this equation was derived by http://www.cs.swan.ac.uk/~cssimon/line_intersection.html
-    double a = ((y3-y4)*(x1-x3) + ((x4 - x3)*(y1-y3))) / ((x4-x3)*(y1-y2) - ((x1-x2)*(y4-y3)));
-    double b = (((y1-y2) * (x1-x3)) + ((x2-x1) * (y1-y3))) / (((x4-x3) * (y1-y2)) - ((x1-x2) * (y4-y3)));
+    LT a = ((y3-y4)*(x1-x3) + ((x4 - x3)*(y1-y3))) / ((x4-x3)*(y1-y2) - ((x1-x2)*(y4-y3)));
+    LT b = (((y1-y2) * (x1-x3)) + ((x2-x1) * (y1-y3))) / (((x4-x3) * (y1-y2)) - ((x1-x2) * (y4-y3)));
     if(a >= 0 && a <= 1 && b >= 0 && b <= 1)
         return true;
     else{
@@ -244,34 +244,34 @@ Point<LT> LineSegment<LT>::intersectionPoint(LineSegment L){
     if(this->slope() != L.slope()){
     }
     
-      double m1 = slope();// slope of object calling method
-      double mX1 = this->p1.getXValue();
-      double mY1 = this->p1.getYValue();
+      LT m1 = slope();// slope of object calling method
+      LT mX1 = this->p1.getXValue();
+      LT mY1 = this->p1.getYValue();
     
-      double c1 = mY1 - (m1 * mX1);// This is my b for the first equation
+      LT c1 = mY1 - (m1 * mX1);// This is my b for the first equation
       
-      double x1 = L.getPoint1().getXValue();
-      double y1 = L.getPoint1().getYValue();
+      LT x1 = L.getPoint1().getXValue();
+      LT y1 = L.getPoint1().getYValue();
     
-      double m2 = L.slope(); // slope of the parameter object
-      double c2 = y1 - (m2 * x1);// this is my b for second equation
-    double xPointIntercept = (c2 - c1)/ (m1 - m2);
-    double yPointIntercept = ((c1*m2) - (c2*m1))/(m2-m1);
+      LT m2 = L.slope(); // slope of the parameter object
+      LT c2 = y1 - (m2 * x1);// this is my b for second equation
+    LT xPointIntercept = (c2 - c1)/ (m1 - m2);
+    LT yPointIntercept = ((c1*m2) - (c2*m1))/(m2-m1);
     Point<LT> pt( round(xPointIntercept),  round(yPointIntercept));
     return pt;
 }
 template<class LT>
 void LineSegment<LT>::displayEquation(){
    // print y=m*x+c y=1*x+0
-    double x1,y1;
+    LT x1,y1;
     x1 = p1.getXValue();
     y1 = p1.getYValue();
      
    // double b = round(y1 - (slope() * x1));
-   double x2 = p2.getXValue();
-   double y2 = p2.getYValue();
+   LT x2 = p2.getXValue();
+   LT y2 = p2.getYValue();
     
-    double slope = round((y2 - y1) / (x2-x1));
+    LT slope = round((y2 - y1) / (x2-x1));
    
     cout<< "y=" <<  slope << "*x+" <<  yIntercept().getYValue() << endl;
   
@@ -287,11 +287,11 @@ class Segments{//This class stores a set of line segments and has it own methods
 protected:
     LineSegment<IT>* segments;// array but we dont know the size yet
     int count;
-    int maxSize;
+    IT maxSize;
     
 public:
     Segments();
-    Segments(int size);
+    Segments(IT size);
     void addLineSegment(LineSegment<IT> L);
     void display();
     void displaySub();
@@ -305,7 +305,7 @@ Segments<IT>::Segments () {
    
 }
 template<class IT>
-Segments<IT>:: Segments (int size) {
+Segments<IT>:: Segments (IT size) {
     segments = new LineSegment<IT> [size];
     count = 0;
     maxSize = size;
