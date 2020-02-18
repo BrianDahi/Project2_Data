@@ -399,7 +399,12 @@ void Segments<IT>::display(){
        }
     }
 }
-
+template <class IT>
+ostream& operator <<  (ostream& s, Segments<IT>& interval) {
+    s << (interval.display());
+   // s << "(" << (otherOne.x) << ", " << (otherOne.y) << ")";
+    return s;
+}
 class Exception{
     
 };
@@ -420,7 +425,7 @@ int main() {
   // Point<int>* intPoint = new Point<int> (1,10);
 // cout << (*intPoint) << endl;//This is printing the overload operator
     
-   // Segments<double> intervals(numberLines);
+    Segments<double> intervals(numberLines);
     
     for(int i = 0; i <= numberLines; ++i){
         cin >> x1 >> y1 >> x2 >> y2;
@@ -431,14 +436,14 @@ int main() {
        // Point<double> point2(x2, y2);
       LineSegment<double>* newLine = new LineSegment<double>((*point1), (*point2));
         cout<<(*point1)<<endl;
-        cout<<( *newLine)<<endl;
-       // intervals.addLineSegment(newLine);
+        cout<<(*newLine)<<endl;
+       intervals.addLineSegment((*newLine));
         if(cin.eof()){
             break;
         }
     }
    
-   // intervals.display();
+    intervals.display();
 
     return 0;
 }
