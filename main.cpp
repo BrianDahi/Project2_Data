@@ -313,6 +313,7 @@ public:
     void addLineSegment(LineSegment<IT> L);
     void display();
     void displaySub();
+    Segments aClosedPolygon();//This will return a closed polygon
     
 };
 template<class IT>
