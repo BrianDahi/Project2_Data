@@ -23,35 +23,39 @@ double round(double num)
     }    return rndnum;
     
 }
-
-
 template <class DT>
 class Point; //class prototype
+template <class DT>
+ostream& operator <<(ostream& s, Point<DT>& otherOne);
+
 template<class LT>
 class LineSegment;
+template <class LT>
+ostream& operator <<(ostream& s, LineSegment<LT>& otherOne);
+
 template<class IT>
 class Segments;
+template <class IT>
+ostream& operator <<(ostream& s, Segments<IT>& otherOne);
 
 //Start of Point class
 template<class DT>
-class Point{//look in textBook
+class Point{
+    friend ostream& operator << <DT>(ostream& s, Point<DT>& otherOne);
     protected:
-    // we are pointing to the address location
-    // regardless of type
+  
     DT x;
     DT y;
     public:
     Point();//default
     Point(DT xValue, DT yValue);
-    
     void setLocation(DT xValue, DT yValue);//This sets x and y
-    
     DT getXValue();//return x
     DT getYValue();//return y
 
     void display();//prints in this format (0.0,0.0)
-    
 };
+
 template <class DT>
 Point<DT>::Point(){
     x = NULL;
@@ -62,28 +66,38 @@ Point<DT>::Point(DT a, DT b){
     x = a;
     y = b;
 }
+
 template<class DT>
 void Point<DT>::setLocation(DT xValue, DT yValue){// question isnt this what the constructor does.
     x = xValue;
     y = yValue;
 }
+
 template<class DT>
 DT Point<DT>::getXValue(){
     return  x;
 }
+
 template <class DT>
 DT Point<DT>::getYValue(){
     return  y;
 }
+
 template<class DT>
 void Point<DT>::display(){
     cout<< "("<< round(x) << ", " << round(y) <<")";
+}
+template <class DT>
+ostream& operator <<  (ostream& s, Point<DT>& otherOne) {
+    s << "(" << (*otherOne.x) << ", " << (*otherOne.y) << ")";
+    return s;
 }
 // End of Point class
 
 // Start of LineSegment class
 template<class LT>
 class LineSegment{
+    friend ostream& operator << <LT>(ostream& s, LineSegment<LT>& otherOne);
     protected:
     //so in main when we decide which type of data its going to be
     //The LT will be converted to that LT
@@ -301,6 +315,7 @@ void LineSegment<LT>::displayEquation(){
 //start of Intervals Class
 template<class IT>
 class Segments{//This class stores a set of line segments and has it own methods
+    friend ostream& operator << <IT>(ostream& s, Segments<IT>& otherOne);
     
 protected:
     LineSegment<IT>* segments;// array but we dont know the size yet
@@ -416,3 +431,52 @@ int main() {
 
     return 0;
 }
+
+
+/*
+#include <iostream>
+using namespace std;
+
+class Brian{
+public:
+    int num;
+    Brian();
+    Brian(int num2);
+    //operator is redefineing operations such as + * / <<
+    Brian operator+ (Brian abo);
+};
+Brian::Brian(){}
+Brian::Brian(int num2){
+    num = num2;
+}
+Brian Brian::operator+ (Brian abo){
+    Brian brandNew;
+    brandNew.num = num + abo.num;
+    return(brandNew);
+}
+class Second{
+public:
+    Second();
+    ~Second();// destructor
+    
+};
+Second::Second(){
+    cout<<"I am the constructor"<<endl;
+}
+Second::~Second(){
+    cout<<" I am the deleter"<< endl;
+}
+int main() {
+    Second con;
+    cout<<"something"<<endl;
+    
+    Brian a(34);
+    Brian b(21);
+    Brian c;
+    c = a + b;
+    cout << c.num << endl;
+    cout<<"Hello"<< endl;
+    
+    return 0;
+}
+*/
