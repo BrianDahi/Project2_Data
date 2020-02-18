@@ -89,7 +89,7 @@ void Point<DT>::display(){
 }
 template <class DT>
 ostream& operator <<  (ostream& s, Point<DT>& otherOne) {
-    s << "(" << (*otherOne.x) << ", " << (*otherOne.y) << ")";
+    s << "(" << (otherOne.x) << ", " << (otherOne.y) << ")";
     return s;
 }
 // End of Point class
@@ -306,8 +306,13 @@ void LineSegment<LT>::displayEquation(){
     LT slope = round((y2 - y1) / (x2-x1));
    
     cout<< "y=" <<  slope << "*x+" <<  yIntercept().getYValue() << endl;
-  
     
+}
+template <class LT>
+ostream& operator <<  (ostream& s, LineSegment<LT>& equation) {
+    s << "y=" <<  (equation.slope()) << "*x+" <<  (equation.yIntercept().getYValue()) ;
+   // s << "(" << (otherOne.x) << ", " << (otherOne.y) << ")";
+    return s;
 }
 
 //End of LineSegment class
@@ -412,71 +417,30 @@ int main() {
     double x1,x2,y1,y2;
     int numberLines ;
     cin >> numberLines;
-  
-    Segments<double> intervals(numberLines);
+  // Point<int>* intPoint = new Point<int> (1,10);
+// cout << (*intPoint) << endl;//This is printing the overload operator
+    
+   // Segments<double> intervals(numberLines);
     
     for(int i = 0; i <= numberLines; ++i){
         cin >> x1 >> y1 >> x2 >> y2;
-        Point<double> point1(x1,y1);
-        Point<double> point2(x2, y2);
-        LineSegment<double> newLine(point1, point2);
-        
-        intervals.addLineSegment(newLine);
+        Point<double>* point1 = new Point<double>(x1,y1);
+         Point<double>* point2 = new Point<double>(x2,y2);
+       // Point<double> point1(x1,y1);
+       
+       // Point<double> point2(x2, y2);
+      LineSegment<double>* newLine = new LineSegment<double>((*point1), (*point2));
+        cout<<(*point1)<<endl;
+        cout<<( *newLine)<<endl;
+       // intervals.addLineSegment(newLine);
         if(cin.eof()){
             break;
         }
     }
    
-    intervals.display();
+   // intervals.display();
 
     return 0;
 }
 
 
-/*
-#include <iostream>
-using namespace std;
-
-class Brian{
-public:
-    int num;
-    Brian();
-    Brian(int num2);
-    //operator is redefineing operations such as + * / <<
-    Brian operator+ (Brian abo);
-};
-Brian::Brian(){}
-Brian::Brian(int num2){
-    num = num2;
-}
-Brian Brian::operator+ (Brian abo){
-    Brian brandNew;
-    brandNew.num = num + abo.num;
-    return(brandNew);
-}
-class Second{
-public:
-    Second();
-    ~Second();// destructor
-    
-};
-Second::Second(){
-    cout<<"I am the constructor"<<endl;
-}
-Second::~Second(){
-    cout<<" I am the deleter"<< endl;
-}
-int main() {
-    Second con;
-    cout<<"something"<<endl;
-    
-    Brian a(34);
-    Brian b(21);
-    Brian c;
-    c = a + b;
-    cout << c.num << endl;
-    cout<<"Hello"<< endl;
-    
-    return 0;
-}
-*/
