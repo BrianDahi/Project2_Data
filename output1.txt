@@ -1,0 +1,32 @@
+Line segment added
+
+Line segment added
+
+Line segment added
+
+Line Segment 1:
+(1, 2),(2, 6)
+Slope:4
+Midpoint:(1.5, 4)
+X Intercept:0.5
+Y Intercept:-2
+Length:4.12
+y=4*x+-2
+Line Segment 2:
+(2, 6),(6, 1)
+Slope:-1.25
+Midpoint:(4, 3.5)
+X Intercept:6.8
+Y Intercept:8.5
+Length:6.4
+y=-1.25*x+8.5
+Line Segment 3:
+(6, 1),(1, 2)
+Slope:-0.2
+Midpoint:(3.5, 1.5)
+X Intercept:11
+Y Intercept:2.2
+Length:5.1
+y=-0.2*x+2.2
+
+The Polygon is formed by the points:(1, 2),(2, 6),(6, 1),(1, 2)

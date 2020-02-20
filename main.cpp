@@ -317,6 +317,11 @@ ostream& operator <<  (ostream& s, LineSegment<LT>& equation) {
 
 //End of LineSegment class
 
+
+
+
+
+
 //start of Intervals Class
 template<class IT>
 class Segments{//This class stores a set of line segments and has it own methods
@@ -333,7 +338,7 @@ public:
     void addLineSegment(LineSegment<IT> L);
     void display();
     void displaySub();
-    Segments aClosedPolygon();//This will return a closed polygon
+    Segments<IT>& aClosedPolygon();//This will return a closed polygon
     
 };
 template<class IT>
@@ -399,7 +404,18 @@ void Segments<IT>::display(){
        }
     }
 }
+
 template <class IT>
+Segments<IT>& Segments<IT>::aClosedPolygon(){
+    Segments newSeg();
+    //This array will contain if any line segments that  that form a polygon
+    Segments<IT>* polygonSegs;
+    //Todo first thoughts are to use the array segments and compare for polygon
+    //
+    return newSeg;
+    
+}
+template <class IT>// Not sure what this is going to print TODO
 ostream& operator <<  (ostream& s, Segments<IT>& interval) {
     s << (interval.display());
    // s << "(" << (otherOne.x) << ", " << (otherOne.y) << ")";
