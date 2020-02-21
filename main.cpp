@@ -58,8 +58,8 @@ class Point{
 
 template <class DT>
 Point<DT>::Point(){
-    x = NULL;
-    y = NULL;
+    x = 0.0;
+    y = 0.0;
 }
 template<class DT>
 Point<DT>::Point(DT a, DT b){
@@ -338,7 +338,8 @@ public:
     void addLineSegment(LineSegment<IT> L);
     void display();
     void displaySub();
-    Segments<IT>& aClosedPolygon();//This will return a closed polygon
+   // Segments<IT>&
+    void aClosedPolygon();//This will return a closed polygon
     
 };
 template<class IT>
@@ -350,7 +351,7 @@ Segments<IT>::Segments () {
 }
 template<class IT>
 Segments<IT>:: Segments (IT size) {
-    segments = new LineSegment<IT> [size];
+    segments = new LineSegment<IT> [int(size)];
     count = 0;
     maxSize = size;
    
@@ -404,15 +405,36 @@ void Segments<IT>::display(){
        }
     }
 }
-
+//Segments<IT>&
 template <class IT>
-Segments<IT>& Segments<IT>::aClosedPolygon(){
-    Segments newSeg();
-    //This array will contain if any line segments that  that form a polygon
-    Segments<IT>* polygonSegs;
+void Segments<IT>::aClosedPolygon(){
+    Segments newSeg;
+   
+    //This if statment will check if their is atleast 3 segments added to
+    //the array segments
+    if(count < 3){
+      //  return 0;//No polygon
+    }
+    
+    
+    //Now lets remove redundant line segments TODO
+    IT testx,testy,testX2,testY2 = 0.0;
+    for(int i = 0; i < count; ++i){
+        testx = segments[i].getPoint1().getXValue();
+        testy = segments[i].getPoint1().getYValue();
+        for(int j = i+1; j < count ;++j){
+            if(segments[i].itIntersects(segments[j])){
+                cout<< true<<endl;
+            }
+        }
+        cout<< "in closed polygon"<<testx<<endl;
+    }
+    
     //Todo first thoughts are to use the array segments and compare for polygon
-    //
-    return newSeg;
+    //This array will contain if any line segments that  that form a polygon
+
+     Segments<IT>* polygonSegs;
+    //return newSeg;
     
 }
 template <class IT>// Not sure what this is going to print TODO
@@ -454,11 +476,12 @@ int main() {
         cout<<(*point1)<<endl;
         cout<<(*newLine)<<endl;
        intervals.addLineSegment((*newLine));
+       intervals.aClosedPolygon();
         if(cin.eof()){
             break;
         }
     }
-   
+    
     intervals.display();
 
     return 0;
