@@ -338,10 +338,13 @@ public:
     void addLineSegment(LineSegment<IT> L);
     void display();
     void displaySub();
-   // Segments<IT>&
+    Segments<IT>& findAllIntersects(LineSegment<IT>& LS);
+    //Segments<IT>& This is for aClosed Polygon I am just testing output with void
     void aClosedPolygon();//This will return a closed polygon
+    LineSegment<IT>& findClosest(Point<IT>& aPoint);
     
 };
+
 template<class IT>
 Segments<IT>::Segments () {
     segments = NULL;
@@ -405,6 +408,25 @@ void Segments<IT>::display(){
        }
     }
 }
+template<class IT>
+Segments<IT>& Segments<IT>::findAllIntersects(LineSegment<IT>& LS){
+    
+    Segments<IT>* intersectArray;
+    for(int i = 0; i < count -1; ++i){
+            //This if statement will take the object and compare it to the array of line segs
+            // and if true store into array intersetArray
+            if(LS.itIntersects(segments[i])){
+                intersectArray[i] = segments[i];
+            }
+    }
+    return intersectArray;
+}
+template<class IT>
+LineSegment<IT>& Segments<IT>::findClosest(Point<IT>& aPoint){
+    LineSegment<IT> closestToPoint();
+    return closestToPoint;
+}
+
 //Segments<IT>&
 template <class IT>
 void Segments<IT>::aClosedPolygon(){
