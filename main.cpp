@@ -28,22 +28,21 @@ class Point; //class prototype
 template <class DT>
 ostream& operator <<(ostream& s, Point<DT>& otherOne);
 
-template<class LT>
+template<class DT>
 class LineSegment;
-template <class LT>
-ostream& operator <<(ostream& s, LineSegment<LT>& otherOne);
+template <class DT>
+ostream& operator <<(ostream& s, LineSegment<DT>& otherOne);
 
-template<class IT>
+template<class DT>
 class Segments;
-template <class IT>
-ostream& operator <<(ostream& s, Segments<IT>& otherOne);
+template <class DT>
+ostream& operator <<(ostream& s, Segments<DT>& otherOne);
 
 //Start of Point class
 template<class DT>
 class Point{
     friend ostream& operator << <DT>(ostream& s, Point<DT>& otherOne);
     protected:
-  
     DT x;
     DT y;
     public:
@@ -52,7 +51,6 @@ class Point{
     void setLocation(DT xValue, DT yValue);//This sets x and y
     DT getXValue();//return x
     DT getYValue();//return y
-
     void display();//prints in this format (0.0,0.0)
 };
 
@@ -95,48 +93,48 @@ ostream& operator <<  (ostream& s, Point<DT>& otherOne) {
 // End of Point class
 
 // Start of LineSegment class
-template<class LT>
+template<class DT>
 class LineSegment{
-    friend ostream& operator << <LT>(ostream& s, LineSegment<LT>& otherOne);
+    friend ostream& operator << <DT>(ostream& s, LineSegment<DT>& otherOne);
     protected:
     //so in main when we decide which type of data its going to be
     //The LT will be converted to that LT
-        Point<LT> p1;
-        Point<LT> p2;
+        Point<DT> p1;
+        Point<DT> p2;
     public:
     LineSegment();
-    LineSegment(Point<LT> one, Point<LT> owo);
+    LineSegment(Point<DT> one, Point<DT> owo);
     
-    LT length();// return the length of the line segment - done
-    Point<LT> midpoint();//returns a point object - done
+    DT length();// return the length of the line segment - done
+    Point<DT> midpoint();//returns a point object - done
     
-    Point<LT> xIntercept();
-    Point<LT> yIntercept();
-    LT slope();
+    Point<DT> xIntercept();
+    Point<DT> yIntercept();
+    DT slope();
     bool itIntersects(LineSegment L);
-    Point<LT> getPoint1();
-    Point<LT> getPoint2();
-    Point<LT> intersectionPoint(LineSegment L);
+    Point<DT> getPoint1();
+    Point<DT> getPoint2();
+    Point<DT> intersectionPoint(LineSegment L);
     bool isParrallel(LineSegment L);//checks if slopes are the same
     void displayEquation();// print y = m * x + c
     
 };
-template <class LT>
-LineSegment<LT>::LineSegment(){//Default construtor
+template <class DT>
+LineSegment<DT>::LineSegment(){//Default construtor
     p1.setLocation(0.0, 0.0);
     p2.setLocation(0.0, 0.0);
 }
-template<class LT>
-LineSegment<LT>:: LineSegment(Point<LT> one, Point<LT> two){
+template<class DT>
+LineSegment<DT>:: LineSegment(Point<DT> one, Point<DT> two){
     p1 = one;
     p2 = two;
 }
-template<class LT>
-LT LineSegment<LT>::length(){
-    LT l = 0.0;
-    LT x1,x2,y1,y2;//These points are going to be populated with the object call.
-    LT squareRt;//This will be used to find the root
-    LT temp = 0.0;
+template<class DT>
+DT LineSegment<DT>::length(){
+    DT l = 0.0;
+    DT x1,x2,y1,y2;//These points are going to be populated with the object call.
+    DT squareRt;//This will be used to find the root
+    DT temp = 0.0;
     x1 = p1.getXValue();
     y1 = p1.getYValue();
     
@@ -152,41 +150,41 @@ LT LineSegment<LT>::length(){
         
         squareRt = ( l/temp + temp) / 2;
       }
-    LT length =  round(squareRt);
+    DT length =  round(squareRt);
     return length;
 }
-template<class LT>
-LT LineSegment<LT>::slope(){
+template<class DT>
+DT LineSegment<DT>::slope(){
    
-    LT x1,x2,y1,y2;
+    DT x1,x2,y1,y2;
     x1 = p1.getXValue();
     y1 = p1.getYValue();
        
     x2 = p2.getXValue();
     y2 = p2.getYValue();
     //slope is (y2 - y1) / (x2-x1)
-    LT slope = (y2 - y1) / (x2-x1);
+    DT slope = (y2 - y1) / (x2-x1);
     return slope;
    
 }
-template<class LT>
-Point<LT> LineSegment<LT>::midpoint(){
+template<class DT>
+Point<DT> LineSegment<DT>::midpoint(){
     
     //((x1 + x2)/2, (y1 + y2)/2)
-    LT x1,x2,y1,y2;
+    DT x1,x2,y1,y2;
     x1 = p1.getXValue();
     y1 = p1.getYValue();
     x2 = p2.getXValue();
     y2 = p2.getYValue();
-    LT midPtX = (x1 + x2)/2;
-    LT midPtY = (y1 + y2)/2;
-    Point<LT> midPt( round(midPtX),  round(midPtY));
+    DT midPtX = (x1 + x2)/2;
+    DT midPtY = (y1 + y2)/2;
+    Point<DT> midPt( round(midPtX),  round(midPtY));
     return midPt;
 }
 
-template<class LT>
-Point<LT> LineSegment<LT>::xIntercept(){
-    LT x1,x2,y1,y2;
+template<class DT>
+Point<DT> LineSegment<DT>::xIntercept(){
+    DT x1,x2,y1,y2;
     x1 = p1.getXValue();
     y1 = p1.getYValue();
     x2 = p2.getXValue();
@@ -194,52 +192,52 @@ Point<LT> LineSegment<LT>::xIntercept(){
     // y = mx + b; we need b
     
     // now we can find x intercept y becomes zero
-     LT slope = (y2 - y1) / (x2-x1);
-    LT b = y1 - (slope * x1);
-    LT xInter = ( - b ) / slope;
-    Point<LT> pointxIntercept( round(xInter), 0);
+     DT slope = (y2 - y1) / (x2-x1);
+    DT b = y1 - (slope * x1);
+    DT xInter = ( - b ) / slope;
+    Point<DT> pointxIntercept( round(xInter), 0);
     return pointxIntercept;
 }
-template<class LT>
-Point<LT> LineSegment<LT>::yIntercept(){
-    LT x1,x2,y1,y2;
+template<class DT>
+Point<DT> LineSegment<DT>::yIntercept(){
+    DT x1,x2,y1,y2;
     x1 = p1.getXValue();
     y1 = p1.getYValue();
     x2 = p2.getXValue();
     y2 = p2.getYValue();
     // y = mx + b; we need b
-    LT slope = (y2 - y1) / (x2-x1);
+    DT slope = (y2 - y1) / (x2-x1);
    //double b = y1 - (slope * x1);
    // now we can find x intercept
-    LT yInter =  y1 - (slope * x1);
-    Point<LT> pointyIntercept(0 ,  round(yInter));
+    DT yInter =  y1 - (slope * x1);
+    Point<DT> pointyIntercept(0 ,  round(yInter));
     return pointyIntercept;
 }
 //I am using these two getPoint methods to access thepoint object from the
 //parameter line seg
-template<class LT>
-Point<LT> LineSegment<LT>::getPoint1(){
-    LT x = p1.getXValue();
-    LT y = p1.getYValue();
-    Point<LT> px(x,y);
+template<class DT>
+Point<DT> LineSegment<DT>::getPoint1(){
+    DT x = p1.getXValue();
+    DT y = p1.getYValue();
+    Point<DT> px(x,y);
     return px;
 }
-template<class LT>
-Point<LT> LineSegment<LT>::getPoint2(){
-    LT x = p2.getXValue();
-    LT y = p2.getYValue();
-    Point<LT> px2(x,y);
+template<class DT>
+Point<DT> LineSegment<DT>::getPoint2(){
+    DT x = p2.getXValue();
+    DT y = p2.getYValue();
+    Point<DT> px2(x,y);
     return px2;
 }
-template<class LT>
-bool LineSegment<LT>::isParrallel(LineSegment<LT> L){//Questi754!on about the object created.
+template<class DT>
+bool LineSegment<DT>::isParrallel(LineSegment<DT> L){//Questi754!on about the object created.
    /* The this pointer is letting me access the points in the object that
     is calling the method
    */
        return this->slope() == L.slope();
 }
-template<class LT>
-bool LineSegment<LT>::itIntersects(LineSegment<LT> L){
+template<class DT>
+bool LineSegment<DT>::itIntersects(LineSegment<DT> L){
     /* if they have the same slope then they will never intersect
      however if they dont then sooner or later they will intersect*/
    // test more then just the slope
@@ -248,27 +246,27 @@ bool LineSegment<LT>::itIntersects(LineSegment<LT> L){
     if(this->slope() == L.slope()){
         return false;
     }
-    LT x1 = this->p1.getXValue();
-    LT y1 = this->p1.getYValue();
-    LT x2 = this->p2.getXValue();
-    LT y2 = this->p2.getYValue();
+    DT x1 = this->p1.getXValue();
+    DT y1 = this->p1.getYValue();
+    DT x2 = this->p2.getXValue();
+    DT y2 = this->p2.getYValue();
     
     
-    LT x3 = L.getPoint1().getXValue();
-    LT y3 = L.getPoint1().getYValue();
-    LT x4 = L.getPoint2().getXValue();
-    LT y4 = L.getPoint2().getYValue();
+    DT x3 = L.getPoint1().getXValue();
+    DT y3 = L.getPoint1().getYValue();
+    DT x4 = L.getPoint2().getXValue();
+    DT y4 = L.getPoint2().getYValue();
     // this equation was derived by http://www.cs.swan.ac.uk/~cssimon/line_intersection.html
-    LT a = ((y3-y4)*(x1-x3) + ((x4 - x3)*(y1-y3))) / ((x4-x3)*(y1-y2) - ((x1-x2)*(y4-y3)));
-    LT b = (((y1-y2) * (x1-x3)) + ((x2-x1) * (y1-y3))) / (((x4-x3) * (y1-y2)) - ((x1-x2) * (y4-y3)));
+    DT a = ((y3-y4)*(x1-x3) + ((x4 - x3)*(y1-y3))) / ((x4-x3)*(y1-y2) - ((x1-x2)*(y4-y3)));
+    DT b = (((y1-y2) * (x1-x3)) + ((x2-x1) * (y1-y3))) / (((x4-x3) * (y1-y2)) - ((x1-x2) * (y4-y3)));
     if(a >= 0 && a <= 1 && b >= 0 && b <= 1)
         return true;
     else{
         return false;
     }
 }
-template<class LT>
-Point<LT> LineSegment<LT>::intersectionPoint(LineSegment L){
+template<class DT>
+Point<DT> LineSegment<DT>::intersectionPoint(LineSegment L){
     /*The idea is when they do intercet they will have the
      same y values so we will set them equal to each other
      and find the points. after we find x we will set the x in
@@ -276,40 +274,40 @@ Point<LT> LineSegment<LT>::intersectionPoint(LineSegment L){
     if(this->slope() != L.slope()){
     }
     
-      LT m1 = slope();// slope of object calling method
-      LT mX1 = this->p1.getXValue();
-      LT mY1 = this->p1.getYValue();
+      DT m1 = slope();// slope of object calling method
+      DT mX1 = this->p1.getXValue();
+      DT mY1 = this->p1.getYValue();
     
-      LT c1 = mY1 - (m1 * mX1);// This is my b for the first equation
+      DT c1 = mY1 - (m1 * mX1);// This is my b for the first equation
       
-      LT x1 = L.getPoint1().getXValue();
-      LT y1 = L.getPoint1().getYValue();
+      DT x1 = L.getPoint1().getXValue();
+      DT y1 = L.getPoint1().getYValue();
     
-      LT m2 = L.slope(); // slope of the parameter object
-      LT c2 = y1 - (m2 * x1);// this is my b for second equation
-    LT xPointIntercept = (c2 - c1)/ (m1 - m2);
-    LT yPointIntercept = ((c1*m2) - (c2*m1))/(m2-m1);
-    Point<LT> pt( round(xPointIntercept),  round(yPointIntercept));
+      DT m2 = L.slope(); // slope of the parameter object
+      DT c2 = y1 - (m2 * x1);// this is my b for second equation
+    DT xPointIntercept = (c2 - c1)/ (m1 - m2);
+    DT yPointIntercept = ((c1*m2) - (c2*m1))/(m2-m1);
+    Point<DT> pt( round(xPointIntercept),  round(yPointIntercept));
     return pt;
 }
-template<class LT>
-void LineSegment<LT>::displayEquation(){
+template<class DT>
+void LineSegment<DT>::displayEquation(){
    // print y=m*x+c y=1*x+0
-    LT x1,y1;
+    DT x1,y1;
     x1 = p1.getXValue();
     y1 = p1.getYValue();
      
    // double b = round(y1 - (slope() * x1));
-   LT x2 = p2.getXValue();
-   LT y2 = p2.getYValue();
+   DT x2 = p2.getXValue();
+   DT y2 = p2.getYValue();
     
-    LT slope = round((y2 - y1) / (x2-x1));
+    DT slope = round((y2 - y1) / (x2-x1));
    
     cout<< "y=" <<  slope << "*x+" <<  yIntercept().getYValue() << endl;
     
 }
-template <class LT>
-ostream& operator <<  (ostream& s, LineSegment<LT>& equation) {
+template <class DT>
+ostream& operator <<  (ostream& s, LineSegment<DT>& equation) {
     s << "y=" <<  (equation.slope()) << "*x+" <<  (equation.yIntercept().getYValue()) ;
    // s << "(" << (otherOne.x) << ", " << (otherOne.y) << ")";
     return s;
@@ -323,54 +321,55 @@ ostream& operator <<  (ostream& s, LineSegment<LT>& equation) {
 
 
 //start of Intervals Class
-template<class IT>
+template<class DT>
 class Segments{//This class stores a set of line segments and has it own methods
-    friend ostream& operator << <IT>(ostream& s, Segments<IT>& otherOne);
+    friend ostream& operator << <DT>(ostream& s, Segments<DT>& otherOne);
     
 protected:
-    LineSegment<IT>* segments;// array but we dont know the size yet
+    LineSegment<DT>* segments;// array but we dont know the size yet
     int count;
-    IT maxSize;
+    DT maxSize;
     
 public:
     Segments();
-    Segments(IT size);
-    void addLineSegment(LineSegment<IT> L);
+    Segments(DT size);
+    void addLineSegment(LineSegment<DT> L);
     void display();
     void displaySub();
-    Segments<IT>& findAllIntersects(LineSegment<IT>& LS);
+    Segments<DT>& findAllIntersects(LineSegment<DT>& LS);
     //Segments<IT>& This is for aClosed Polygon I am just testing output with void
     void aClosedPolygon();//This will return a closed polygon
-    LineSegment<IT>& findClosest(Point<IT>& aPoint);
+    LineSegment<DT>& findClosest(Point<DT>& aPoint);
+    
     
 };
 
-template<class IT>
-Segments<IT>::Segments () {
+template<class DT>
+Segments<DT>::Segments () {
     segments = NULL;
     count = 0;
     maxSize = 0;
    
 }
-template<class IT>
-Segments<IT>:: Segments (IT size) {
-    segments = new LineSegment<IT> [int(size)];
+template<class DT>
+Segments<DT>:: Segments (DT size) {
+    segments = new LineSegment<DT> [int(size)];
     count = 0;
     maxSize = size;
    
 }
-template<class IT>
-void Segments<IT>::addLineSegment(LineSegment<IT> L){
+template<class DT>
+void Segments<DT>::addLineSegment(LineSegment<DT> L){
 
     segments[count] = L;// count is keeping track of element
     count++;
 }
-template<class IT>
-void Segments<IT>::display(){
+template<class DT>
+void Segments<DT>::display(){
     //This for loop will go through all line segments and display
     // the many outputs .
     for(int i = 0; i < maxSize; ++i){
-        IT slope = round(segments[i].slope());
+        DT slope = round(segments[i].slope());
         cout<<"Line Segment " <<i + 1<<":"<<endl;
         segments[i].getPoint1().display();
         cout<<",";
@@ -408,11 +407,11 @@ void Segments<IT>::display(){
        }
     }
 }
-template<class IT>
-Segments<IT>& Segments<IT>::findAllIntersects(LineSegment<IT>& LS){
+template<class DT>
+Segments<DT>& Segments<DT>::findAllIntersects(LineSegment<DT>& LS){
     
-    Segments<IT>* intersectArray;
-    for(int i = 0; i < count -1; ++i){
+    Segments<DT>* intersectArray;
+    for(int i = 0; i < count ; ++i){
             //This if statement will take the object and compare it to the array of line segs
             // and if true store into array intersetArray
             if(LS.itIntersects(segments[i])){
@@ -421,15 +420,76 @@ Segments<IT>& Segments<IT>::findAllIntersects(LineSegment<IT>& LS){
     }
     return intersectArray;
 }
-template<class IT>
-LineSegment<IT>& Segments<IT>::findClosest(Point<IT>& aPoint){
-    LineSegment<IT> closestToPoint();
-    return closestToPoint;
+
+template<class DT>
+LineSegment<DT>& Segments<DT>::findClosest(Point<DT>& aPoint){
+    LineSegment<DT>* closestToSeg;
+    DT slope, yIntercept, temp, squareRt,distance,tempDistance, numerator, denominator = 0.0;
+    int counter = 0;
+    for(int i = 0; i < count; ++i){
+      
+        slope = segments[i].slope();// grabs the slope of that seg
+        yIntercept = segments[i].yIntercept();//grabs the y intercept of the seg
+        //To find the numerator we( multiply the slope by the x value of the given point
+        // then subtract the y value of given point ,next add the y intercept
+        //finally we check if it is a negative and if so we multiply by -1 to change back.
+        numerator = (slope * aPoint.getXValue()) - aPoint.getYValue() + yIntercept;
+        if(numerator < 0){
+            numerator *= -1;
+        }
+        //For denominator we square root 1 + slope^2
+        denominator = 1 + (slope*slope);
+        squareRt = denominator / 2;
+        while(squareRt != temp){
+             temp = squareRt;
+            
+            squareRt = ( denominator/temp + temp) / 2;
+          }
+        denominator = squareRt;
+        
+        distance = numerator/denominator;
+        if(i == 0){//This if statment will store the distance in the first iteration
+            tempDistance = distance;
+        }
+        if(distance < tempDistance && distance >= 0){// if distance is closer then we will overwrite tempDistance
+             tempDistance = distance;
+            counter = i;
+            
+        }
+    }
+    closestToSeg = new LineSegment<DT>(segments[counter].getPoint1(), segments[counter].getPoint2());
+    
+    /*for(int i = 0; i < count; ++i){
+        slope = segments[i].slope();// grabs the slope of that seg
+               yIntercept = segments[i].yIntercept();//grabs the y intercept of the seg
+               //To find the numerator we( multiply the slope by the x value of the given point
+               // then subtract the y value of given point ,next add the y intercept
+               //finally we check if it is a negative and if so we multiply by -1 to change back.
+               numerator = (slope * aPoint.getXValue()) - aPoint.getYValue() + yIntercept;
+               if(numerator < 0){
+                   numerator *= -1;
+               }
+               //For denominator we square root 1 + slope^2
+               denominator = 1 + (slope*slope);
+               squareRt = denominator / 2;
+               while(squareRt != temp){
+                    temp = squareRt;
+                   
+                   squareRt = ( denominator/temp + temp) / 2;
+                 }
+               denominator = squareRt;
+               
+               distance = numerator/denominator;
+        if(tempDistance == distance){
+            closestToSeg = new LineSegment<DT>(segments[i].getPoint1(), segments[i].getPoint2());
+        }
+    }*/
+    return closestToSeg;
 }
 
 //Segments<IT>&
-template <class IT>
-void Segments<IT>::aClosedPolygon(){
+template <class DT>
+void Segments<DT>::aClosedPolygon(){
     Segments newSeg;
    
     //This if statment will check if their is atleast 3 segments added to
@@ -440,7 +500,7 @@ void Segments<IT>::aClosedPolygon(){
     
     
     //Now lets remove redundant line segments TODO
-    IT testx,testy,testX2,testY2 = 0.0;
+    DT testx,testy,testX2,testY2 = 0.0;
     for(int i = 0; i < count; ++i){
         testx = segments[i].getPoint1().getXValue();
         testy = segments[i].getPoint1().getYValue();
@@ -455,7 +515,7 @@ void Segments<IT>::aClosedPolygon(){
     //Todo first thoughts are to use the array segments and compare for polygon
     //This array will contain if any line segments that  that form a polygon
 
-     Segments<IT>* polygonSegs;
+     Segments<DT>* polygonSegs;
     //return newSeg;
     
 }
