@@ -2,12 +2,6 @@
 
 using namespace std;
 // this method is from TA Zuyuan Zhang
-/*double round(double var)
-{
-    double value = (int)(var * 100.0);
-    return (double)value / 100.0;
-}*/
-
 double round(double num)
 {    double rndnum;
     double num2 = num * 100;
@@ -31,12 +25,12 @@ ostream& operator <<(ostream& s, Point<DT>& otherOne);
 template<class DT>
 class LineSegment;
 template <class DT>
-ostream& operator <<(ostream& s, LineSegment<DT>& otherOne);
+ostream& operator <<(ostream& s, LineSegment<DT>& equation);
 
 template<class DT>
 class Segments;
 template <class DT>
-ostream& operator <<(ostream& s, Segments<DT>& otherOne);
+ostream& operator <<(ostream& s, Segments<DT>& displayAll);
 
 //Start of Point class
 template<class DT>
@@ -91,6 +85,10 @@ ostream& operator <<  (ostream& s, Point<DT>& otherOne) {
     return s;
 }
 // End of Point class
+
+
+
+
 
 // Start of LineSegment class
 template<class DT>
@@ -178,7 +176,7 @@ Point<DT> LineSegment<DT>::midpoint(){
     y2 = p2.getYValue();
     DT midPtX = (x1 + x2)/2;
     DT midPtY = (y1 + y2)/2;
-    Point<DT> midPt( round(midPtX),  round(midPtY));
+    Point<DT> midPt( midPtX,  midPtY);
     return midPt;
 }
 
@@ -195,7 +193,7 @@ Point<DT> LineSegment<DT>::xIntercept(){
      DT slope = (y2 - y1) / (x2-x1);
     DT b = y1 - (slope * x1);
     DT xInter = ( - b ) / slope;
-    Point<DT> pointxIntercept( round(xInter), 0);
+    Point<DT> pointxIntercept( xInter, 0);
     return pointxIntercept;
 }
 template<class DT>
@@ -210,7 +208,7 @@ Point<DT> LineSegment<DT>::yIntercept(){
    //double b = y1 - (slope * x1);
    // now we can find x intercept
     DT yInter =  y1 - (slope * x1);
-    Point<DT> pointyIntercept(0 ,  round(yInter));
+    Point<DT> pointyIntercept(0 ,  yInter);
     return pointyIntercept;
 }
 //I am using these two getPoint methods to access thepoint object from the
@@ -301,15 +299,15 @@ void LineSegment<DT>::displayEquation(){
    DT x2 = p2.getXValue();
    DT y2 = p2.getYValue();
     
-    DT slope = round((y2 - y1) / (x2-x1));
+    DT slope = (y2 - y1) / (x2-x1);
    
     cout<< "y=" <<  slope << "*x+" <<  yIntercept().getYValue() << endl;
     
 }
 template <class DT>
 ostream& operator <<  (ostream& s, LineSegment<DT>& equation) {
-    s << "y=" <<  (equation.slope()) << "*x+" <<  (equation.yIntercept().getYValue()) ;
-   // s << "(" << (otherOne.x) << ", " << (otherOne.y) << ")";
+    s << "y=" <<  round(equation.slope()) << "*x+" <<  round(equation.yIntercept().getYValue()) ;
+
     return s;
 }
 
@@ -323,7 +321,7 @@ ostream& operator <<  (ostream& s, LineSegment<DT>& equation) {
 //start of Intervals Class
 template<class DT>
 class Segments{//This class stores a set of line segments and has it own methods
-    friend ostream& operator << <DT>(ostream& s, Segments<DT>& otherOne);
+    friend ostream& operator << <DT>(ostream& s, Segments<DT>& displayAll);
     
 protected:
     LineSegment<DT>* segments;// array but we dont know the size yet
@@ -334,12 +332,14 @@ public:
     Segments();
     Segments(DT size);
     void addLineSegment(LineSegment<DT> L);
+    void removeLineSegment(Point<DT>& p1, Point<DT>& p2);
     void display();
     void displaySub();
     Segments<DT>& findAllIntersects(LineSegment<DT>& LS);
     //Segments<IT>& This is for aClosed Polygon I am just testing output with void
     void aClosedPolygon();//This will return a closed polygon
     LineSegment<DT>& findClosest(Point<DT>& aPoint);
+    virtual ~Segments(); //destructor
     
     
 };
@@ -365,9 +365,39 @@ void Segments<DT>::addLineSegment(LineSegment<DT> L){
     count++;
 }
 template<class DT>
+void Segments<DT>::removeLineSegment(Point<DT>& p1, Point<DT>& p2){
+    LineSegment<DT>* segmentsWithRemoved;
+    DT x1,x2,y1,y2;
+    int counter = 0;
+    for(int i = 0; i < count; ++i){
+        x1 =segments[i].getPoint1().getXValue();
+        y1 = segments[i].getPoint1().getYValue();
+        
+        x2 = segments[i].getPoint2().getXValue();
+        y2 = segments[i].getPoint2().getYValue();
+       
+        // I need to over write the element if it matches
+        //This if statment is checking the x and y points for both p1 and p2
+        // I double compare x1,y1,x2,y2
+        if(x1 == p1.getXValue() && y1 == p1.getYValue() && x1 == p2.getXValue() && y1 == p2.getYValue()&&
+           x2 == p1.getXValue() && y2 == p1.getYValue() && x2 == p2.getXValue() && y2 == p2.getYValue()){
+           // segmentsWithRemoved[i] = segments[i];
+            counter = i;
+            break;
+        }
+            
+    }
+    for(int j = counter ; j < count;++j){
+        segments[j] = segments[j+1];
+    }
+    
+}
+template<class DT>
 void Segments<DT>::display(){
     //This for loop will go through all line segments and display
     // the many outputs .
+    
+    
     for(int i = 0; i < maxSize; ++i){
         DT slope = round(segments[i].slope());
         cout<<"Line Segment " <<i + 1<<":"<<endl;
@@ -379,42 +409,46 @@ void Segments<DT>::display(){
         cout<<"Midpoint:";
         segments[i].midpoint().display();
         cout<<"\n";
-        cout<<"X Intercept:"<<segments[i].xIntercept().getXValue()<<endl;
-        cout<<"Y Intercept:"<<segments[i].yIntercept().getYValue()<<endl;
-        cout<<"Length:"<<segments[i].length()<<endl;
+        cout<<"X Intercept:"<<round(segments[i].xIntercept().getXValue())<<endl;
+        cout<<"Y Intercept:"<<round(segments[i].yIntercept().getYValue())<<endl;
+        cout<<"Length:"<<round(segments[i].length())<<endl;
         segments[i].displayEquation();
       
     }
-    for(int i = 0; i < count - 1; ++i){
+    
        
-       for(int j = i + 1; j < count ;++j ){//The j will set the offset
-           //So when compareing the first element it wont be redundent and compare the first with the first
-           if(segments[i].isParrallel(segments[j])){
-               cout<<"The line segments compared are segments["<<i<<"] and segments["<<j
-               << "]: Lines are Parallel"<<endl;
-           }
-           if( segments[i].itIntersects(segments[j])){
-               cout<<"The line segments compared are segments["<<i<<"] and segments["<<
-               j<<"]: Intersection Point :";
-               segments[i].intersectionPoint(segments[j]).display();
-               cout<<"\n";
-           }
-           if(segments[i].isParrallel(segments[j]) == false && segments[i].itIntersects(segments[j]) == false){
-               
-               cout<<"The line segments compared are segments["<<i<<"] and segments["<<j<<
-               "]: Not Parallel and not Intersecting"<< endl;
-           }
-       }
-    }
+    
 }
+template <class DT>
+ostream& operator <<  (ostream& s, Segments<DT>& displayAll) {
+   // s << "Hello in ostream segments";
+    displayAll.display();
+    
+    return s;
+}
+
 template<class DT>
 Segments<DT>& Segments<DT>::findAllIntersects(LineSegment<DT>& LS){
-    
+     DT x1,x2,y1,y2;
+    DT Lx1,Lx2,Ly1,Ly2;
     Segments<DT>* intersectArray;
     for(int i = 0; i < count ; ++i){
+            x1 =segments[i].getPoint1().getXValue();
+               y1 = segments[i].getPoint1().getYValue();
+               
+               x2 = segments[i].getPoint2().getXValue();
+               y2 = segments[i].getPoint2().getYValue();
+        Lx1 = LS.getPoint1().getXValue();
+        Ly1 =  LS.getPoint1().getYValue();
+        Ly2 =  LS.getPoint2().getYValue();
+        Lx2 =  LS.getPoint2().getXValue();
             //This if statement will take the object and compare it to the array of line segs
             // and if true store into array intersetArray
             if(LS.itIntersects(segments[i])){
+                if(x1 == Lx1 && x1 == Lx2 && x2 == Lx1 && x2 == Lx2 &&
+                   y1 == Ly1 && y1 == Ly2 && y2 == Ly1 && y2 == Ly2){
+                    break;
+                }
                 intersectArray[i] = segments[i];
             }
     }
@@ -423,13 +457,13 @@ Segments<DT>& Segments<DT>::findAllIntersects(LineSegment<DT>& LS){
 
 template<class DT>
 LineSegment<DT>& Segments<DT>::findClosest(Point<DT>& aPoint){
-    LineSegment<DT>* closestToSeg;
+   // LineSegment<DT>* closestToSeg;
     DT slope, yIntercept, temp, squareRt,distance,tempDistance, numerator, denominator = 0.0;
     int counter = 0;
     for(int i = 0; i < count; ++i){
       
         slope = segments[i].slope();// grabs the slope of that seg
-        yIntercept = segments[i].yIntercept();//grabs the y intercept of the seg
+        yIntercept = segments[i].yIntercept().getYValue();//grabs the y intercept of the seg
         //To find the numerator we( multiply the slope by the x value of the given point
         // then subtract the y value of given point ,next add the y intercept
         //finally we check if it is a negative and if so we multiply by -1 to change back.
@@ -457,33 +491,7 @@ LineSegment<DT>& Segments<DT>::findClosest(Point<DT>& aPoint){
             
         }
     }
-    closestToSeg = new LineSegment<DT>(segments[counter].getPoint1(), segments[counter].getPoint2());
-    
-    /*for(int i = 0; i < count; ++i){
-        slope = segments[i].slope();// grabs the slope of that seg
-               yIntercept = segments[i].yIntercept();//grabs the y intercept of the seg
-               //To find the numerator we( multiply the slope by the x value of the given point
-               // then subtract the y value of given point ,next add the y intercept
-               //finally we check if it is a negative and if so we multiply by -1 to change back.
-               numerator = (slope * aPoint.getXValue()) - aPoint.getYValue() + yIntercept;
-               if(numerator < 0){
-                   numerator *= -1;
-               }
-               //For denominator we square root 1 + slope^2
-               denominator = 1 + (slope*slope);
-               squareRt = denominator / 2;
-               while(squareRt != temp){
-                    temp = squareRt;
-                   
-                   squareRt = ( denominator/temp + temp) / 2;
-                 }
-               denominator = squareRt;
-               
-               distance = numerator/denominator;
-        if(tempDistance == distance){
-            closestToSeg = new LineSegment<DT>(segments[i].getPoint1(), segments[i].getPoint2());
-        }
-    }*/
+   LineSegment<DT> closestToSeg(segments[counter].getPoint1(), segments[counter].getPoint2());
     return closestToSeg;
 }
 
@@ -519,11 +527,10 @@ void Segments<DT>::aClosedPolygon(){
     //return newSeg;
     
 }
-template <class IT>// Not sure what this is going to print TODO
-ostream& operator <<  (ostream& s, Segments<IT>& interval) {
-    s << (interval.display());
-   // s << "(" << (otherOne.x) << ", " << (otherOne.y) << ")";
-    return s;
+
+template <class DT>
+Segments<DT>::~Segments() {
+    cout << "A Segment Object was destroyed" << endl;
 }
 class Exception{
     
@@ -539,7 +546,8 @@ class SegmentsException : Exception{
 
 int main() {
 
-    double x1,x2,y1,y2;
+    double x1,x2,y1,y2,r1,r2,r3,r4,c1,c2;
+    char command;
     int numberLines ;
     cin >> numberLines;
   // Point<int>* intPoint = new Point<int> (1,10);
@@ -548,24 +556,63 @@ int main() {
     Segments<double> intervals(numberLines);
     
     for(int i = 0; i <= numberLines; ++i){
-        cin >> x1 >> y1 >> x2 >> y2;
-        Point<double>* point1 = new Point<double>(x1,y1);
-         Point<double>* point2 = new Point<double>(x2,y2);
-       // Point<double> point1(x1,y1);
-       
-       // Point<double> point2(x2, y2);
-      LineSegment<double>* newLine = new LineSegment<double>((*point1), (*point2));
-        cout<<(*point1)<<endl;
-        cout<<(*newLine)<<endl;
-       intervals.addLineSegment((*newLine));
-       intervals.aClosedPolygon();
+        cin>>command;
+        cout<<command<<endl;
+        switch(command){
+            case 'A':{
+                cin >> x1 >> y1 >> x2 >> y2;
+                    Point<double>* point1 = new Point<double>(x1,y1);
+                    Point<double>* point2 = new Point<double>(x2,y2);
+                    LineSegment<double>* newLine = new LineSegment<double>((*point1), (*point2));
+                    intervals.addLineSegment((*newLine));
+                    cout<<"Line segment added"<< endl;
+                delete point1;
+                delete point2;
+                delete newLine;
+                break;
+            }
+            case 'R':{
+                cin>>r1>>r2>>r3>>r4;
+                Point<double>* point1 = new Point<double>(r1,r2);
+                Point<double>* point2 = new Point<double>(r3,r4);
+                intervals.removeLineSegment((*point1),(*point2) );
+                cout<< "Line segment removed"<<endl;
+                delete point1;
+                delete point2;
+               break;
+            }
+            case 'D':{
+                cout<<intervals<<endl;
+                break;
+                
+            }
+            case 'P':{
+                cout<< "polygon bonus"<<endl;
+                 //Bonus for closed polygon
+                break;
+            }
+            case 'I':{
+                cout<<"intersect almost done"<< endl;
+                break;
+            }
+            case 'C':{
+                cin>>c1>>c2;
+                Point<double>* point1 = new Point<double>(c1,c2);
+                intervals.findClosest((*point1));
+                
+                cout<< "almost done closest"<< endl;
+                break;
+            }
+            default: cout<<"Invalid command"<<endl;
+                break;
+        }
         if(cin.eof()){
             break;
         }
     }
     
-    intervals.display();
-
+   // intervals.display();
+   // cout<<(intervals)<<endl;
     return 0;
 }
 
