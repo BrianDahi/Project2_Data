@@ -301,7 +301,7 @@ void LineSegment<DT>::displayEquation(){
     
     DT slope = (y2 - y1) / (x2-x1);
    
-    cout<< "y=" <<  slope << "*x+" <<  yIntercept().getYValue() << endl;
+    cout<< "y=" << round( slope) << "*x+" <<  round(yIntercept().getYValue()) << endl;
     
 }
 template <class DT>
@@ -327,18 +327,23 @@ protected:
     LineSegment<DT>* segments;// array but we dont know the size yet
     int count;
     DT maxSize;
+    int index;
     
 public:
+    
     Segments();
     Segments(DT size);
     void addLineSegment(LineSegment<DT> L);
-    void removeLineSegment(Point<DT>& p1, Point<DT>& p2);
-    void display();
-    void displaySub();
+    void removeLineSegment(Point<DT> p1, Point<DT> p2);
+    
     Segments<DT>& findAllIntersects(LineSegment<DT>& LS);
     //Segments<IT>& This is for aClosed Polygon I am just testing output with void
     void aClosedPolygon();//This will return a closed polygon
     LineSegment<DT>& findClosest(Point<DT>& aPoint);
+    int getIndex();
+    void setIndex(int num);
+    void setArray();
+    LineSegment<DT>* getArray();
     virtual ~Segments(); //destructor
     
     
@@ -363,66 +368,60 @@ void Segments<DT>::addLineSegment(LineSegment<DT> L){
 
     segments[count] = L;// count is keeping track of element
     count++;
+   
+    
 }
+
 template<class DT>
-void Segments<DT>::removeLineSegment(Point<DT>& p1, Point<DT>& p2){
-    LineSegment<DT>* segmentsWithRemoved;
-    DT x1,x2,y1,y2;
+void Segments<DT>::removeLineSegment(Point<DT> p1, Point<DT> p2){
+  
+    DT pX1 = p1.getXValue();
+    DT pY1 = p1.getYValue();
+    DT pX2 = p2.getXValue();
+    DT pY2 = p2.getYValue();
+    DT x1,y1,x2,y2;
     int counter = 0;
+
+    
     for(int i = 0; i < count; ++i){
         x1 =segments[i].getPoint1().getXValue();
         y1 = segments[i].getPoint1().getYValue();
-        
         x2 = segments[i].getPoint2().getXValue();
         y2 = segments[i].getPoint2().getYValue();
-       
-        // I need to over write the element if it matches
-        //This if statment is checking the x and y points for both p1 and p2
-        // I double compare x1,y1,x2,y2
-        if(x1 == p1.getXValue() && y1 == p1.getYValue() && x1 == p2.getXValue() && y1 == p2.getYValue()&&
-           x2 == p1.getXValue() && y2 == p1.getYValue() && x2 == p2.getXValue() && y2 == p2.getYValue()){
-           // segmentsWithRemoved[i] = segments[i];
-            counter = i;
-            break;
+        
+        if(!(x1 == pX1 && y1 == pY1 && x2 == pX2 && y2 == pY2)){
+            segments[counter] = segments[i];
+          cout<< counter<<endl;
+            counter++;
         }
-            
     }
-    for(int j = counter ; j < count;++j){
-        segments[j] = segments[j+1];
-    }
-    
+   
+    count = counter;
+   
 }
-template<class DT>
-void Segments<DT>::display(){
-    //This for loop will go through all line segments and display
-    // the many outputs .
-    
-    
-    for(int i = 0; i < maxSize; ++i){
-        DT slope = round(segments[i].slope());
-        cout<<"Line Segment " <<i + 1<<":"<<endl;
-        segments[i].getPoint1().display();
-        cout<<",";
-        segments[i].getPoint2().display();
-        cout<<"\n";
-        cout<<"Slope:"<<slope<<endl;
-        cout<<"Midpoint:";
-        segments[i].midpoint().display();
-        cout<<"\n";
-        cout<<"X Intercept:"<<round(segments[i].xIntercept().getXValue())<<endl;
-        cout<<"Y Intercept:"<<round(segments[i].yIntercept().getYValue())<<endl;
-        cout<<"Length:"<<round(segments[i].length())<<endl;
-        segments[i].displayEquation();
-      
-    }
-    
-       
-    
-}
+
 template <class DT>
 ostream& operator <<  (ostream& s, Segments<DT>& displayAll) {
    // s << "Hello in ostream segments";
-    displayAll.display();
+   // displayAll.display();
+    for(int i = 0; i < displayAll.count; ++i){
+        DT slope = round(displayAll.segments[i].slope());
+        s<<"Line Segment " <<i + 1<<":"<<endl;
+       displayAll.segments[i].getPoint1().display();
+        s<<",";
+       displayAll.segments[i].getPoint2().display();
+        s<<"\n";
+        s<<"Slope:"<<slope<<endl;
+        s<<"Midpoint:";
+        displayAll.segments[i].midpoint().display();
+        s<<"\n";
+        s<<"X Intercept:"<<round(displayAll.segments[i].xIntercept().getXValue())<<endl;
+        s<<"Y Intercept:"<<round(displayAll.segments[i].yIntercept().getYValue())<<endl;
+        s<<"Length:"<<round(displayAll.segments[i].length())<<endl;
+        displayAll.segments[i].displayEquation();
+      
+    }
+
     
     return s;
 }
@@ -458,7 +457,8 @@ Segments<DT>& Segments<DT>::findAllIntersects(LineSegment<DT>& LS){
 template<class DT>
 LineSegment<DT>& Segments<DT>::findClosest(Point<DT>& aPoint){
    // LineSegment<DT>* closestToSeg;
-    DT slope, yIntercept, temp, squareRt,distance,tempDistance, numerator, denominator = 0.0;
+    DT slope, yIntercept,  squareRt,distance,tempDistance=0, numerator, denominator = 0;
+    DT temp = 0.0;
     int counter = 0;
     for(int i = 0; i < count; ++i){
       
@@ -485,16 +485,34 @@ LineSegment<DT>& Segments<DT>::findClosest(Point<DT>& aPoint){
         if(i == 0){//This if statment will store the distance in the first iteration
             tempDistance = distance;
         }
-        if(distance < tempDistance && distance >= 0){// if distance is closer then we will overwrite tempDistance
+        if(distance < tempDistance ){// if distance is closer then we will overwrite tempDistance
              tempDistance = distance;
             counter = i;
             
         }
     }
-   LineSegment<DT> closestToSeg(segments[counter].getPoint1(), segments[counter].getPoint2());
-    return closestToSeg;
+    setIndex(counter+1);//plus one to ignore the 0 element
+    return segments[counter];
 }
-
+template<class DT>
+void Segments<DT>::setArray(){
+    LineSegment<DT>* accessArray;
+    for(int i = 0; i < count; ++i){
+        accessArray[i] = segments[i];
+    }
+}
+template<class DT>
+LineSegment<DT>* Segments<DT>::getArray(){
+    return segments;
+}
+template<class DT>
+void Segments<DT>::setIndex(int num){
+    index = num;
+}
+template<class DT>
+int Segments<DT>::getIndex(){
+    return index;
+}
 //Segments<IT>&
 template <class DT>
 void Segments<DT>::aClosedPolygon(){
@@ -546,39 +564,45 @@ class SegmentsException : Exception{
 
 int main() {
 
-    double x1,x2,y1,y2,r1,r2,r3,r4,c1,c2;
+    double x1,x2,y1,y2,r1,r2,r3,r4,c1,c2,i1,i2,i3,i4;
     char command;
     int numberLines ;
     cin >> numberLines;
-  // Point<int>* intPoint = new Point<int> (1,10);
-// cout << (*intPoint) << endl;//This is printing the overload operator
-    
     Segments<double> intervals(numberLines);
-    
-    for(int i = 0; i <= numberLines; ++i){
+   
+    while(!cin.eof()){
         cin>>command;
         cout<<command<<endl;
         switch(command){
             case 'A':{
                 cin >> x1 >> y1 >> x2 >> y2;
-                    Point<double>* point1 = new Point<double>(x1,y1);
-                    Point<double>* point2 = new Point<double>(x2,y2);
-                    LineSegment<double>* newLine = new LineSegment<double>((*point1), (*point2));
-                    intervals.addLineSegment((*newLine));
+                    Point<double> point1(x1,y1);
+                    Point<double> point2(x2,y2);
+                    LineSegment<double> newLine (point1, point2);
+                    intervals.addLineSegment(newLine);
                     cout<<"Line segment added"<< endl;
-                delete point1;
-                delete point2;
-                delete newLine;
+               
+               
                 break;
             }
             case 'R':{
                 cin>>r1>>r2>>r3>>r4;
-                Point<double>* point1 = new Point<double>(r1,r2);
-                Point<double>* point2 = new Point<double>(r3,r4);
-                intervals.removeLineSegment((*point1),(*point2) );
-                cout<< "Line segment removed"<<endl;
-                delete point1;
-                delete point2;
+                Point<double> point1(r1,r2);
+                Point<double> point2 (r3,r4);
+                LineSegment<double> tempLine(point1,point2);//given to test if in current array
+                try{
+                    if(!(intervals.getArray()->getPoint1().getXValue() == tempLine.getPoint1().getXValue() &&
+                        intervals.getArray()->getPoint1().getYValue() == tempLine.getPoint1().getYValue() &&
+                         intervals.getArray()->getPoint2().getXValue() == tempLine.getPoint2().getXValue()&&
+                         intervals.getArray()->getPoint2().getYValue() == tempLine.getPoint2().getYValue())){
+                        throw SegmentsException();
+                        
+                    }
+                }catch(SegmentsException e){
+                    cout<< "Exception,line segment not found" <<endl;
+                }
+                intervals.removeLineSegment(point1,point2);
+                 cout<< "Line segment removed"<<endl;
                break;
             }
             case 'D':{
@@ -592,25 +616,21 @@ int main() {
                 break;
             }
             case 'I':{
+                cin>> i1>>i2>>i3>>i4;
                 cout<<"intersect almost done"<< endl;
                 break;
             }
-            case 'C':{
+            case 'C':{// input seems to be good
                 cin>>c1>>c2;
-                Point<double>* point1 = new Point<double>(c1,c2);
-                intervals.findClosest((*point1));
-                
-                cout<< "almost done closest"<< endl;
+                Point<double> point1(c1,c2);
+                intervals.findClosest(point1);
+                cout<<"The Line segment closest to the given point is: Line segment "<<intervals.getIndex()<<endl;
                 break;
             }
             default: cout<<"Invalid command"<<endl;
                 break;
         }
-        if(cin.eof()){
-            break;
-        }
     }
-    
    // intervals.display();
    // cout<<(intervals)<<endl;
     return 0;
