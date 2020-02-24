@@ -8,8 +8,6 @@ Line segment added
 
 Line segment added
 
-Line segment added
-
 The lines segments intersecting with the given line segment are:
 Line segment 1
 
@@ -32,7 +30,7 @@ y=-1*x+-2
 Line Segment 3:
 (3, 5),(2, 4)
 Slope:1
-Midpoint:(2.5, 4.5) 
+Midpoint:(2.5, 4.5)
 X Intercept:-2
 Y Intercept:2
 Length:1.41
@@ -45,13 +43,5 @@ X Intercept:4
 Y Intercept:2.29
 Length:4.03
 y=-0.57*x+2.29
-Line Segment 5:
-(0, 1),(6, 8)
-Slope:1.17
-Midpoint:(3, 4.5)
-X Intercept:-0.85
-Y Intercept:1
-Length:9.22
-y=1.17*x+1
 
 The Line segment closest to the given point is:Line segment 1

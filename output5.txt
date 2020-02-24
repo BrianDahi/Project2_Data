@@ -4,6 +4,10 @@ Line segment added
 
 Line segment added
 
+Line segment added
+
+Line segment removed
+
 Line Segment 1:
 (1, 2),(2, 1)
 Slope:-1

@@ -330,7 +330,7 @@ protected:
     int index;
     
 public:
-    
+    int count2;
     Segments();
     Segments(DT size);
     void addLineSegment(LineSegment<DT> L);
@@ -368,9 +368,8 @@ void Segments<DT>::addLineSegment(LineSegment<DT> L){
 
     segments[count] = L;// count is keeping track of element
     count++;
-   
-    
-}
+    count2 = count;
+   }
 
 template<class DT>
 void Segments<DT>::removeLineSegment(Point<DT> p1, Point<DT> p2){
@@ -389,9 +388,9 @@ void Segments<DT>::removeLineSegment(Point<DT> p1, Point<DT> p2){
         x2 = segments[i].getPoint2().getXValue();
         y2 = segments[i].getPoint2().getYValue();
         
-        if(!(x1 == pX1 && y1 == pY1 && x2 == pX2 && y2 == pY2)){
+        if( ! (x1 == pX1 && y1 == pY1 && x2 == pX2 && y2 == pY2)){
             segments[counter] = segments[i];
-          cout<< counter<<endl;
+          
             counter++;
         }
     }
@@ -430,13 +429,14 @@ template<class DT>
 Segments<DT>& Segments<DT>::findAllIntersects(LineSegment<DT>& LS){
      DT x1,x2,y1,y2;
     DT Lx1,Lx2,Ly1,Ly2;
-    Segments<DT>* intersectArray;
+    int counter = 0;
+    LineSegment<DT>* tempArray = new LineSegment<DT>[count];
     for(int i = 0; i < count ; ++i){
-            x1 =segments[i].getPoint1().getXValue();
-               y1 = segments[i].getPoint1().getYValue();
-               
-               x2 = segments[i].getPoint2().getXValue();
-               y2 = segments[i].getPoint2().getYValue();
+        x1 =segments[i].getPoint1().getXValue();
+        y1 = segments[i].getPoint1().getYValue();
+        x2 = segments[i].getPoint2().getXValue();
+        y2 = segments[i].getPoint2().getYValue();
+        
         Lx1 = LS.getPoint1().getXValue();
         Ly1 =  LS.getPoint1().getYValue();
         Ly2 =  LS.getPoint2().getYValue();
@@ -448,15 +448,23 @@ Segments<DT>& Segments<DT>::findAllIntersects(LineSegment<DT>& LS){
                    y1 == Ly1 && y1 == Ly2 && y2 == Ly1 && y2 == Ly2){
                     break;
                 }
-                intersectArray[i] = segments[i];
+                tempArray[counter] = segments[i];
+                counter++;
             }
     }
-    return intersectArray;
+     Segments<DT>* intersectArray = new Segments<DT>(counter);
+   
+    for(int j = 0; j < counter ; ++j){
+        intersectArray->addLineSegment(tempArray[j]);
+    }
+    count2 = counter;
+    delete[] tempArray;
+ return *intersectArray;
 }
 
 template<class DT>
 LineSegment<DT>& Segments<DT>::findClosest(Point<DT>& aPoint){
-   // LineSegment<DT>* closestToSeg;
+   
     DT slope, yIntercept,  squareRt,distance,tempDistance=0, numerator, denominator = 0;
     DT temp = 0.0;
     int counter = 0;
@@ -494,6 +502,7 @@ LineSegment<DT>& Segments<DT>::findClosest(Point<DT>& aPoint){
     setIndex(counter+1);//plus one to ignore the 0 element
     return segments[counter];
 }
+
 template<class DT>
 void Segments<DT>::setArray(){
     LineSegment<DT>* accessArray;
@@ -548,7 +557,7 @@ void Segments<DT>::aClosedPolygon(){
 
 template <class DT>
 Segments<DT>::~Segments() {
-    cout << "A Segment Object was destroyed" << endl;
+    delete[] segments;
 }
 class Exception{
     
@@ -570,9 +579,9 @@ int main() {
     cin >> numberLines;
     Segments<double> intervals(numberLines);
    
-    while(!cin.eof()){
-        cin>>command;
-        cout<<command<<endl;
+    while(cin >> command){
+        //cin>>command;
+       // cout<<command<<endl;
         switch(command){
             case 'A':{
                 cin >> x1 >> y1 >> x2 >> y2;
@@ -580,7 +589,7 @@ int main() {
                     Point<double> point2(x2,y2);
                     LineSegment<double> newLine (point1, point2);
                     intervals.addLineSegment(newLine);
-                    cout<<"Line segment added"<< endl;
+                    cout<<"Line segment added\n"<< endl;
                
                
                 break;
@@ -597,12 +606,16 @@ int main() {
                          intervals.getArray()->getPoint2().getYValue() == tempLine.getPoint2().getYValue())){
                         throw SegmentsException();
                         
+                        
                     }
+                    cout<<"Line segment removed\n"<<endl;
+                    intervals.removeLineSegment(point1,point2);
+                    
                 }catch(SegmentsException e){
-                    cout<< "Exception,line segment not found" <<endl;
+                    cout<< "Exception,line segment not found\n" <<endl;
                 }
-                intervals.removeLineSegment(point1,point2);
-                 cout<< "Line segment removed"<<endl;
+               // intervals.removeLineSegment(point1,point2);
+                 
                break;
             }
             case 'D':{
@@ -611,28 +624,37 @@ int main() {
                 
             }
             case 'P':{
-                cout<< "polygon bonus"<<endl;
+                cout<< "Command P not implemented"<<endl;
                  //Bonus for closed polygon
                 break;
             }
             case 'I':{
                 cin>> i1>>i2>>i3>>i4;
-                cout<<"intersect almost done"<< endl;
+                Point<double> point1(i1,i2);
+                Point<double> point2 (i3,i4);
+               
+                LineSegment<double>* intersect = new LineSegment<double>(point1,point2);
+                intervals.findAllIntersects(*intersect);
+                cout<< "The lines segments intersecting with the given line segment are:"<<endl;
+                for(int i = 0; i < intervals.count2; ++i){
+                    cout<<"Line segment "<< i + 1<<endl;
+                }
+                cout<<"\n";//might be to much space
                 break;
-            }
+                }
+               
             case 'C':{// input seems to be good
                 cin>>c1>>c2;
                 Point<double> point1(c1,c2);
                 intervals.findClosest(point1);
-                cout<<"The Line segment closest to the given point is: Line segment "<<intervals.getIndex()<<endl;
+                cout<<"The Line segment closest to the given point is:Line segment "<<intervals.getIndex()<<endl;
                 break;
             }
             default: cout<<"Invalid command"<<endl;
                 break;
         }
     }
-   // intervals.display();
-   // cout<<(intervals)<<endl;
+ 
     return 0;
 }
 
