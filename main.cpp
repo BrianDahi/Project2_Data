@@ -17,8 +17,9 @@ double round(double num)
     }    return rndnum;
     
 }
+//Prototype for classes and ostream
 template <class DT>
-class Point; //class prototype
+class Point;
 template <class DT>
 ostream& operator <<(ostream& s, Point<DT>& otherOne);
 
@@ -228,7 +229,7 @@ Point<DT> LineSegment<DT>::getPoint2(){
     return px2;
 }
 template<class DT>
-bool LineSegment<DT>::isParrallel(LineSegment<DT> L){//Questi754!on about the object created.
+bool LineSegment<DT>::isParrallel(LineSegment<DT> L){
    /* The this pointer is letting me access the points in the object that
     is calling the method
    */
@@ -288,22 +289,7 @@ Point<DT> LineSegment<DT>::intersectionPoint(LineSegment L){
     Point<DT> pt( round(xPointIntercept),  round(yPointIntercept));
     return pt;
 }
-template<class DT>
-void LineSegment<DT>::displayEquation(){
-   // print y=m*x+c y=1*x+0
-    DT x1,y1;
-    x1 = p1.getXValue();
-    y1 = p1.getYValue();
-     
-   // double b = round(y1 - (slope() * x1));
-   DT x2 = p2.getXValue();
-   DT y2 = p2.getYValue();
-    
-    DT slope = (y2 - y1) / (x2-x1);
-   
-    cout<< "y=" << round( slope) << "*x+" <<  round(yIntercept().getYValue()) << endl;
-    
-}
+
 template <class DT>
 ostream& operator <<  (ostream& s, LineSegment<DT>& equation) {
     s << "y=" <<  round(equation.slope()) << "*x+" <<  round(equation.yIntercept().getYValue()) ;
@@ -312,10 +298,6 @@ ostream& operator <<  (ostream& s, LineSegment<DT>& equation) {
 }
 
 //End of LineSegment class
-
-
-
-
 
 
 //start of Intervals Class
@@ -330,7 +312,7 @@ protected:
     int index;
     
 public:
-    int count2;
+    int count2;//This is a second count I use for resizing
     Segments();
     Segments(DT size);
     void addLineSegment(LineSegment<DT> L);
@@ -373,15 +355,19 @@ void Segments<DT>::addLineSegment(LineSegment<DT> L){
 
 template<class DT>
 void Segments<DT>::removeLineSegment(Point<DT> p1, Point<DT> p2){
-  
+  //This method is personally made for finding the line segment with the
+    //given points first we will set the parameter values  to two x values and two y values
     DT pX1 = p1.getXValue();
     DT pY1 = p1.getYValue();
     DT pX2 = p2.getXValue();
     DT pY2 = p2.getYValue();
     DT x1,y1,x2,y2;
+    //This counter will be used for the array  when shifting
     int counter = 0;
 
-    
+    //Here in the for loop we sign the other four variables to compare
+    //The if statement will check if they are not equal and depending on what the previous counter is
+    // it will bethe starting element and what ever is in the i element will be wrote into it.
     for(int i = 0; i < count; ++i){
         x1 =segments[i].getPoint1().getXValue();
         y1 = segments[i].getPoint1().getYValue();
@@ -394,15 +380,14 @@ void Segments<DT>::removeLineSegment(Point<DT> p1, Point<DT> p2){
             counter++;
         }
     }
-   
+   //we overwrite count with counter for the purpose of the display
     count = counter;
    
 }
 
 template <class DT>
 ostream& operator <<  (ostream& s, Segments<DT>& displayAll) {
-   // s << "Hello in ostream segments";
-   // displayAll.display();
+  
     for(int i = 0; i < displayAll.count; ++i){
         DT slope = round(displayAll.segments[i].slope());
         s<<"Line Segment " <<i + 1<<":"<<endl;
@@ -417,14 +402,18 @@ ostream& operator <<  (ostream& s, Segments<DT>& displayAll) {
         s<<"X Intercept:"<<round(displayAll.segments[i].xIntercept().getXValue())<<endl;
         s<<"Y Intercept:"<<round(displayAll.segments[i].yIntercept().getYValue())<<endl;
         s<<"Length:"<<round(displayAll.segments[i].length())<<endl;
-        displayAll.segments[i].displayEquation();
+        s<<displayAll.segments[i];
+        s<<"\n";
       
     }
 
-    
     return s;
 }
-
+//This class will take a line segment object and break it down to the points x and y
+// then we will see if they intecet or if the line seg lays on it. if it lays on the compared line we will
+// break so it wont be counted.
+//We will store the results of the intersecting arrays into a temp array , then store that array in our segments
+// object
 template<class DT>
 Segments<DT>& Segments<DT>::findAllIntersects(LineSegment<DT>& LS){
      DT x1,x2,y1,y2;
@@ -461,7 +450,9 @@ Segments<DT>& Segments<DT>::findAllIntersects(LineSegment<DT>& LS){
     delete[] tempArray;
  return *intersectArray;
 }
-
+//This class will find the closes line segments to the given point
+// we will use the forumal (absolute ((sl0pe *x) -y + yIntercept)
+// This is divided by squareroot 1 + slope square
 template<class DT>
 LineSegment<DT>& Segments<DT>::findClosest(Point<DT>& aPoint){
    
@@ -580,8 +571,7 @@ int main() {
     Segments<double> intervals(numberLines);
    
     while(cin >> command){
-        //cin>>command;
-       // cout<<command<<endl;
+       \
         switch(command){
             case 'A':{
                 cin >> x1 >> y1 >> x2 >> y2;
@@ -590,9 +580,7 @@ int main() {
                     LineSegment<double> newLine (point1, point2);
                     intervals.addLineSegment(newLine);
                     cout<<"Line segment added\n"<< endl;
-               
-               
-                break;
+                    break;
             }
             case 'R':{
                 cin>>r1>>r2>>r3>>r4;
@@ -605,8 +593,6 @@ int main() {
                          intervals.getArray()->getPoint2().getXValue() == tempLine.getPoint2().getXValue()&&
                          intervals.getArray()->getPoint2().getYValue() == tempLine.getPoint2().getYValue())){
                         throw SegmentsException();
-                        
-                        
                     }
                     cout<<"Line segment removed\n"<<endl;
                     intervals.removeLineSegment(point1,point2);
@@ -614,7 +600,7 @@ int main() {
                 }catch(SegmentsException e){
                     cout<< "Exception,line segment not found\n" <<endl;
                 }
-               // intervals.removeLineSegment(point1,point2);
+               
                  
                break;
             }
@@ -637,13 +623,14 @@ int main() {
                 intervals.findAllIntersects(*intersect);
                 cout<< "The lines segments intersecting with the given line segment are:"<<endl;
                 for(int i = 0; i < intervals.count2; ++i){
+                    
                     cout<<"Line segment "<< i + 1<<endl;
                 }
-                cout<<"\n";//might be to much space
+                cout<<"\n";
                 break;
                 }
                
-            case 'C':{// input seems to be good
+            case 'C':{
                 cin>>c1>>c2;
                 Point<double> point1(c1,c2);
                 intervals.findClosest(point1);
